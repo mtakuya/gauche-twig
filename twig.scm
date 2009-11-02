@@ -67,10 +67,9 @@
   (define (twig:update str)
     (if (< 140 (string-length str))
         "Error : string length > 140"
-        (begin
-          (let1 status 
-                (string-append uri-status (uri-encode-string str))
-                (twig:post status)))))
+        (let1 status 
+            (string-append uri-status (uri-encode-string str))
+            (twig:post status))))
   ;Dispatch. only one method (v0.0.1).
   (lambda (key)
     (if (eq? key :update)
