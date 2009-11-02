@@ -1,0 +1,23 @@
+NAME
+    This is Gauche module twig.
+
+VERSION
+    0.0.1
+
+INSTALLATION
+    1. twig.scm add copy to *load-path* directory.
+
+SYNOPSIS
+    ;;Update status
+    (use twig)
+    (define user "USER")
+    (define pass "PASS")
+    (define twitter-client (twig:make-client user pass))
+    ((twitter-client :update) "twig")
+
+NOTES
+    * Gauche-0.8.13
+    * only one proc(update status)
+
+AUTHOR
+    Takuya Mannami <mtakuya@users.sourceforge.jp>
