@@ -66,6 +66,4 @@
         (cut twig:tweet! <>)
         #f)))
 
-(provide "twig")
-
-  
+(provide "twig")  
