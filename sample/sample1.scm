@@ -2,4 +2,4 @@
 (define user USER)
 (define pass PASS)
 (define twitter-client (twig:make-client user pass))
-(display ((twitter-client :update) "twig"))
+(display ((twitter-client :tweet!) "twig"))
