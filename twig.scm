@@ -44,10 +44,13 @@
 (define query-status "status")
 
 (define (make-basic-auth-token user pass)
-  (format "Basic ~a" (base64-encode-string (format "~a:~a" user pass)))) ;encoding
+  (let1 user:pass 
+        (base64-encode-string (format "~a:~a" user pass)) ;encoding
+        (format "Basic ~a" user:pass)))
 
 (define (make-uri-update message)
-  (let1 message (uri-encode-string message) ;encoding
+  (let1 message
+        (uri-encode-string message) ;encoding
         (format "~a?~a=~a" path-statuses/update query-status message)))
 
 (define (twig:make-client user pass)
@@ -61,9 +64,10 @@
     (if (< 140 (string-length message))
         (error "Message is over 140, got:" message)
         (twig:post message)))
+  ;Dispatch.
   (lambda (key)
     (if (eq? key :tweet!)
         (cut twig:tweet! <>)
         #f)))
 
-(provide "twig")  
+(provide "twig")
