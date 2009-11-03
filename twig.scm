@@ -1,4 +1,4 @@
-;;; twig.scm - Twitter client (v0.0.1)
+;;; twig.scm - Twitter client (v0.0.2)
 ;;;
 ;;; Copyright (c) 2009 Takuya Mannami <mtakuya@users.sourceforge.jp>
 ;;;
@@ -28,7 +28,7 @@
 ;;; LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 ;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-;;; 
+;;;
 
 (define-module twig
   (use rfc.http)
@@ -39,41 +39,33 @@
 
 (select-module twig)
 
-(define server "twitter.com")
-(define uri-update "/statuses/update.xml?")
-(define uri-status "status=")
-;(define uri-source "source=")
-;(define client-name "twig")
-(define basic "Basic ")
+(define uri-host "twitter.com")
+(define path-statuses/update  "/statuses/update.xml")
+(define query-status "status")
 
+(define (make-basic-auth-token user pass)
+  (format "Basic ~a" (base64-encode-string (format "~a:~a" user pass)))) ;encoding
 
-(define (request-uri str) (string-append uri-update str))
-;  (string-append uri-update str "&" uri-source
-;                 (uri-encode-string client-name)))
-
-(define (user&pass->base64str user pass)
-  (string-append basic
-                 (base64-encode-string (string-append user ":" pass)))) ;:encoding
+(define (make-uri-update message)
+  (let1 message (uri-encode-string message) ;encoding
+        (format "~a?~a=~a" path-statuses/update query-status message)))
 
 (define (twig:make-client user pass)
-  (define (twig:post status)
+  (define (twig:post message)
     (http-post
-     server
-     (request-uri status)
+     uri-host
+     (make-uri-update message)
      ""
-     :authorization (user&pass->base64str user pass)))
-
-  ;Update user status
-  (define (twig:update str)
-    (if (< 140 (string-length str))
-        "Error : string length > 140"
-        (let1 status 
-            (string-append uri-status (uri-encode-string str))
-            (twig:post status))))
-  ;Dispatch. only one method (v0.0.1).
+     :authorization (make-basic-auth-token user pass)))
+  (define (twig:tweet! message)
+    (if (< 140 (string-length message))
+        (error "Message is over 140, got:" message)
+        (twig:post message)))
   (lambda (key)
-    (if (eq? key :update)
-        (cut twig:update <>)
+    (if (eq? key :tweet!)
+        (cut twig:tweet! <>)
         #f)))
 
 (provide "twig")
+
+  

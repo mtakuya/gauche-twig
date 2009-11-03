@@ -2,7 +2,7 @@ NAME
     This is Gauche module twig.
 
 VERSION
-    0.0.1
+    0.0.2
 
 INSTALLATION
     1. twig.scm add copy to *load-path* directory.
@@ -13,7 +13,7 @@ SYNOPSIS
     (define user "USER")
     (define pass "PASS")
     (define twitter-client (twig:make-client user pass))
-    ((twitter-client :update) "twig")
+    ((twitter-client :tweet!) "twig")
 
 NOTES
     * Gauche-0.8.13

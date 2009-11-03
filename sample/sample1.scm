@@ -1,5 +1,5 @@
 (use twig)
 (define user USER)
-(define pass PASSWORD)
+(define pass PASS)
 (define twitter-client (twig:make-client user pass))
-((twitter-client :update) "hello")
+(display ((twitter-client :update) "twig"))
