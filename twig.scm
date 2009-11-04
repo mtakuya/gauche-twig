@@ -1,3 +1,4 @@
+;;;
 ;;; twig.scm - Twitter client (v0.0.2)
 ;;;
 ;;; Copyright (c) 2009 Takuya Mannami <mtakuya@users.sourceforge.jp>
@@ -29,30 +30,30 @@
 ;;; NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 ;;; SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ;;;
-
+ 
 (define-module twig
   (use rfc.http)
   (use rfc.uri)
   (use rfc.base64)
   (export twig:make-client)
 )
-
+ 
 (select-module twig)
-
+ 
 (define uri-host "twitter.com")
-(define path-statuses/update  "/statuses/update.xml")
+(define path-statuses/update "/statuses/update.xml")
 (define query-status "status")
-
+ 
 (define (make-basic-auth-token user pass)
-  (let1 user:pass 
-        (base64-encode-string (format "~a:~a" user pass)) ;encoding
+  (let1 user:pass
+        (base64-encode-string (format "~a:~a" user pass)) ; encoding
         (format "Basic ~a" user:pass)))
-
+ 
 (define (make-uri-update message)
   (let1 message
-        (uri-encode-string message) ;encoding
+        (uri-encode-string message) ; encoding
         (format "~a?~a=~a" path-statuses/update query-status message)))
-
+ 
 (define (twig:make-client user pass)
   (define (twig:post message)
     (http-post
@@ -64,10 +65,10 @@
     (if (< 140 (string-length message))
         (error "Message is over 140, got:" message)
         (twig:post message)))
-  ;Dispatch.
+  ; Dispatch.
   (lambda (key)
     (if (eq? key :tweet!)
         (cut twig:tweet! <>)
         #f)))
-
+ 
 (provide "twig")
