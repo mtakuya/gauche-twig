@@ -63,7 +63,7 @@
      :authorization (make-basic-auth-token user pass)))
   (define (twig:tweet! message)
     (if (< 140 (string-length message))
-        (error "Message is over 140, got:" message)
+        (error "over 140 characters:" message)
         (twig:post message)))
   ; Dispatch.
   (lambda (key)
