@@ -64,7 +64,10 @@
   (define (twig:tweet! message)
     (if (< 140 (string-length message))
         (error "over 140 characters:" message)
-        (twig:post message)))
+        (receive (s h b) (twig:post message)
+              (if (string=? s "200")
+                  s
+                  (error "got:"s h b)))))
   (lambda (key)
     (if (eq? key :tweet!)
         (cut twig:tweet! <>)
