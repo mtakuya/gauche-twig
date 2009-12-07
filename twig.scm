@@ -35,13 +35,15 @@
   (use rfc.http)
   (use rfc.uri)
   (use rfc.base64)
-  (export twig:make-client)
+  (use simple-rss)
+  (export twig:make-client twig:get-user-tweet)
 )
  
 (select-module twig)
  
 (define uri-host "twitter.com")
 (define path-statuses/update "/statuses/update.xml")
+(define path-statuses/user-timeline "/statuses/user_timeline/")
 (define query-status "status")
  
 (define (make-basic-auth-token user pass)
@@ -73,4 +75,9 @@
         (cut twig:tweet! <>)
         #f)))
  
+(define (twig:get-user-tweet id path)
+  (rss:uri->slist 
+   #`"http://,uri-host,path-statuses/user-timeline,|id|.rss"
+   path))
+        
 (provide "twig")
